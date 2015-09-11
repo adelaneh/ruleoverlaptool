@@ -4,14 +4,14 @@ We find overlapping/conflicting vaule normalization rules by applying all the va
 
 The screipts `docker-build.sh`, `docker-start.sh` and `docker-stop.sh` respectively build a docker for the web application, start a Django server containing this application inside the docker, and stop the service. After starting the server, the web application would be accessible on http://hostaddress:8000/rule\_overlaps/.
 
-##### Inputs
+### Inputs
 
 The web application takes the following inputs:
 
    * "**Target normalization rule attribute**" corresponds to the `relation.rule_result` property of the normalization rules. All the rules having this values for their `relation.rule_result` property would be considered as target normalization rules to be investigated.
    * "**Target product attribute name**" refers to the name of an attribute's *normalized name*. We extract the *source values* for this attribute and apply all the target normalization rules to them.
 
-##### Output
+### Output
 
 It then generates a list of pairs of normalization rules which overlap. For each rule pair, it also shows a list of values they both match and the number of product items with those values for the target attribute.
 
