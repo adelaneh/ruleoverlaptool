@@ -37,3 +37,21 @@ The directory with the name equal to the value of `value_file_directory` configu
 }
 ```
 where `<value>` is an attribute value, `<prod_id_1>` is the id of a sample product having `<value>` for its attribute and `<cnt>` is the number of procuts having `<value>' for their attributes.
+These files are created using the Python script `extract_source_values_from_json.py`. The help for this command reads as follows:
+
+```
+Usage: python extract_source_values_from_json.py <input_json_file_name_list> <input_json_files_folder> <output_folder>
+
+Arguments:
+
+   <input_json_file_name_list>: A file containing the list of input files each of which cotain JSON objects of product items.
+
+   <input_json_files_folder>: The folder containing the files with the names in <input_json_file_name_list>.
+
+   <output_folder>: The folder to which the extracted values should be writtten. Each attribute's values are stored in a file named by the attributes name.
+
+Please modify the code to change the following parameters:
+
+   1. Attributes to extract source values for (`attributes`).
+   2. Maximum number of sample product ids to store per attribute value (`max_prod_ids`).
+```

@@ -11,7 +11,13 @@ Arguments:
 
    <input_json_files_folder>: The folder containing the files with the names in <input_json_file_name_list>.
 
-   <output_folder>: The folder to which the extracted values should be writtten. Each attribute's values are stored in a file named by the attributes name."""
+   <output_folder>: The folder to which the extracted values should be writtten. Each attribute's values are stored in a file named by the attributes name.
+
+Please modify the code to change the following parameters:
+
+	1. Attributes to extract source values for (`attributes`).
+	2. Maximum number of sample product ids to store per attribute value (`max_prod_ids`).
+"""
 	sys.exit()
 
 values				= {}
