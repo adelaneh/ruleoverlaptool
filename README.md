@@ -1,4 +1,4 @@
-# A Tool for Finding ruleoverlaptool
+# A Tool for Finding Overlapping Normalization Rules
 
 We find overlapping/conflicting vaule normalization rules by applying all the rules for a particular attribute to all the values of a source attribute.
 
