@@ -44,11 +44,14 @@ Usage: python extract_source_values_from_json.py <input_json_file_name_list> <in
 
 Arguments:
 
-   <input_json_file_name_list>: A file containing the list of input files each of which cotain JSON objects of product items.
+   <input_json_file_name_list>: A file containing the list of input files 
+      each of which cotain JSON objects of product items.
 
-   <input_json_files_folder>: The folder containing the files with the names in <input_json_file_name_list>.
+   <input_json_files_folder>: The folder containing the files with the 
+      names in <input_json_file_name_list>.
 
-   <output_folder>: The folder to which the extracted values should be writtten. Each attribute's values are stored in a file named by the attributes name.
+   <output_folder>: The folder to which the extracted values should be 
+      writtten. Each attribute's values are stored in a file named by the attributes name.
 
 Please modify the code to change the following parameters:
 
