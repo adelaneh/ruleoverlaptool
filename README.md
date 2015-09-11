@@ -19,7 +19,8 @@ We create this file based on the Microsoft Excel dump of the rules, as follows:
    1. First, we "Save As" the Excel file as a tab-separated (TSV) text file. We might want to replace the end-of-line (EOL) characters if they are not saved appropriately.
    2. We then feed this file to `convert_pcs_value_rule_rules.py` using the following command:
 
-   `python convert_pcs_value_rule_rules.py <input_file> <output_file>` |
+   ```bash
+   python convert_pcs_value_rule_rules.py <input_file> <output_file>``` |
    ---------------------------------------------------------------------
 
    where `<input_file>` is the TSV file of rules and `<output_file>` is the name of the file we want to save the reformatted rules in.
