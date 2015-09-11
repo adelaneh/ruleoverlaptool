@@ -20,7 +20,8 @@ We create this file based on the Microsoft Excel dump of the rules, as follows:
    2. We then feed this file to `convert_pcs_value_rule_rules.py` using the following command:
 
    ```bash
-   python convert_pcs_value_rule_rules.py <input_file> <output_file>``` |
+   python convert_pcs_value_rule_rules.py <input_file> <output_file>
+   ``` |
    ---------------------------------------------------------------------
 
    where `<input_file>` is the TSV file of rules and `<output_file>` is the name of the file we want to save the reformatted rules in.
