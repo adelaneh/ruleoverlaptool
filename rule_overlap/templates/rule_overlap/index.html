@@ -24,20 +24,6 @@
 		</div>
 		<div class="panel-body">
 				<div class="form-group">
-					<label for="prodattr" class="col-sm-10 control-label">Choose the target product attribute name:</label>
-					<div class="col-sm-10">
-						<select id="prodattr" class="form-control">
-							{% for source_att_name in source_att_names %}
-								{% if source_att_name == 'size' %}
-									<option selected="selected">{{ source_att_name }}</option>
-								{% else %}
-									<option>{{ source_att_name }}</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-					</div>
-					<p></p>
-
 					<label for="cat_codes" class="col-sm-10 control-label">Choose the target normalization rule attribute:</label>
 					<div class="col-sm-10">
 						<select id="cat_codes" class="form-control">
@@ -53,6 +39,20 @@
 
 				</div>
 				<p></p>
+					<label for="prodattr" class="col-sm-10 control-label">Choose the target product attribute name:</label>
+					<div class="col-sm-10">
+						<select id="prodattr" class="form-control">
+							{% for source_att_name in source_att_names %}
+								{% if source_att_name == 'size' %}
+									<option selected="selected">{{ source_att_name }}</option>
+								{% else %}
+									<option>{{ source_att_name }}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
+					<p></p>
+
 				<div class="col-sm-10">
 					<button class="btn btn-primary" id="run-extraction" type="button" onclick="findRuleOverlaps()">Find Rule Overlaps</button>
 				</div>

@@ -21,10 +21,21 @@ def index(request):
 	context 					= {}
 	conf						= ConfigParser.ConfigParser()
 	conf.read('rule_overlap.cfg')
-	attr_rule_map				= rule_overlaps.load_rules(conf.get('INPUT', 'rule_file'))
 	source_att_names			= [fname for fname in os.listdir(conf.get('INPUT', 'value_file_directory'))]
-	context['attr_rule_map']	= attr_rule_map
 	context['source_att_names']	= source_att_names
+	attr_rule_map				= rule_overlaps.load_rules(conf.get('INPUT', 'rule_file'))
+	atts_to_rem					= []
+	for rule_att in attr_rule_map:
+		fnd		= False
+		lower_rule_att		= rule_att.lower().replace(' ', '_').replace('/', '_')
+		for source_att in source_att_names:
+			if source_att in lower_rule_att:
+				fnd		= True
+		if not fnd:
+			atts_to_rem.append(rule_att)
+	for rmatt in atts_to_rem:
+		del attr_rule_map[rmatt]
+	context['attr_rule_map']	= attr_rule_map
 	return render(request, 'rule_overlap/index.html', context)
 
 #==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
