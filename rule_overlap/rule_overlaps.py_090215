@@ -1,0 +1,153 @@
+import sys
+import os
+import re
+import timeit
+
+import cProfile as profile
+
+from pprint import pprint
+
+# feat_name	= 'size'
+# attr_name	= 'Size'
+
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+def load_rules(rulefilename, attr_col=4):
+	ff				= open(rulefilename)
+	attr_rule_map	= {}
+	rules 			= {}
+
+	for line in ff:
+		line		= line.strip()
+		toks		= line.split('\t')
+		if len(toks) > attr_col:
+			if toks[attr_col] not in attr_rule_map:
+				attr_rule_map[toks[attr_col]]	= set()
+			attr_rule_map[toks[attr_col]].add((toks[1], toks[2]))
+			rules[toks[1]]		= toks[2]
+		else:
+			pass
+
+	# for kk in attr_rule_map:
+	# 	print (kk, len(attr_rule_map[kk]))
+	# pprint(len(attr_rule_map['Size']))
+	return (attr_rule_map, rules)
+
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+def apply_rules(datafilename, attr_rule_map, feat_names=['size'], attr_names=['Size'], line_lim=0):
+#	feats_regex_map		= []
+#	for feat_name in feat_names:
+#		feats_regex_map.append(re.compile("\t%s=([^\t]*?)(\t|$)"%(feat_name,)))
+
+	rule_val_item_map	= {}
+	rule_val_seen_map	= {}
+	for attr_name in attr_names:
+		for (kk,_) in attr_rule_map[attr_name]:
+			try:
+				rekk		= re.compile(kk)
+			except:
+				print("Skipping problematic rule (LHS: %s)"%(kk, ))
+			if rekk not in rule_val_item_map:
+				rule_val_item_map[rekk]		= {}
+				rule_val_seen_map[rekk]		= set()
+
+	gg					= open(datafilename)
+	linecnt				= 0
+	itemcnt				= 0
+
+	for line in gg:
+		line		= line.strip()
+		# toks		= line.split('\t')
+		# item_id		= toks[0]
+		item_id		= line[0:line.find("\t")]
+		# for tok in toks:
+		# for feats_regex in feats_regex_map:
+		# 	feat_name_search		= feats_regex.search(line)
+		# 	if feat_name_search:
+		# 		vals_str	= feat_name_search.group(2)
+		for feat_name in feat_names:
+			fnl		= len(feat_name)
+			vals_inx	= line.find("\t%s="%(feat_name,))
+			# if tok[:fnl + 1] == (feat_name + '='):
+				# vals		= tok[fnl + 1:].split('__')
+			if vals_inx > -1:
+				itemcnt		= itemcnt + 1
+				vals_inx	= vals_inx + (fnl + 1) + 1
+				vals_str	= line[vals_inx : line.find("\t", vals_inx + 1)]
+				vals		= vals_str.split('__')
+				for val in vals:
+					for rule in rule_val_item_map:
+						if val in rule_val_seen_map[rule]:
+							continue
+						if val in rule_val_item_map[rule]:
+							rule_val_item_map[rule][val].add(item_id)
+							continue
+						else:
+							matchobj	= rule.match(val)
+							if matchobj is not None and matchobj.span() == (0,len(val)):
+								if val not in rule_val_item_map[rule]:
+									rule_val_item_map[rule][val]	= set([item_id, ])
+								else:
+									rule_val_item_map[rule][val].add(item_id)
+							else:
+								rule_val_seen_map[rule].add(val)
+		line_lim	= line_lim - 1
+		if line_lim == 0:
+			break
+		linecnt		= linecnt + 1
+
+	# for rule in rule_val_item_map:
+	# 	print rule.pattern
+	# 	for val in rule_val_item_map[rule]:
+	# 		print "\t"+val
+	# 		for item_id in rule_val_item_map[rule][val]:
+	# 			print "\t\t"+item_id
+	print("Processed %d from %d items in %s"%(itemcnt, linecnt, datafilename))
+	return rule_val_item_map
+
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+def find_rule_overlaps(rule_val_item_map):
+	rule_overlaps	= {}
+
+	for rule1 in rule_val_item_map:
+		for rule2 in rule_val_item_map:
+			if rule1 != rule2:
+				rulepair		= (rule1, rule2) 
+				revrulepair		= (rule2, rule1) 
+				if rulepair not in rule_overlaps and revrulepair not in rule_overlaps:
+					shks	= set(rule_val_item_map[rule1].keys()) & set(rule_val_item_map[rule2].keys())
+					if len(shks) != 0:
+						rule_overlaps[rulepair]		= {}
+						for val in shks:
+							rule_overlaps[rulepair][val]	= rule_val_item_map[rule1][val]
+	return rule_overlaps
+
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#==#
+
+if __name__ == "__main__":
+	start_time = timeit.default_timer()
+	(attr_rule_map, rules)		= load_rules(sys.argv[1])
+	elapsed = timeit.default_timer() - start_time
+	print(elapsed)
+	start_time = timeit.default_timer()
+	rule_val_item_map			= apply_rules(sys.argv[2], attr_rule_map, feat_names=['size'], attr_names=['Size'])
+	# rule_val_item_map			= profile.run("apply_rules(sys.argv[2], attr_rule_map, feat_names=['size'], attr_names=['Size'])", sort=0)
+	elapsed = timeit.default_timer() - start_time
+	print(elapsed)
+	start_time = timeit.default_timer()
+	rule_overlaps 				= find_rule_overlaps(rule_val_item_map)
+	elapsed = timeit.default_timer() - start_time
+	print(elapsed)
+	print(len(rule_overlaps))
+	sortedpairs					= sorted(rule_overlaps.keys(), key=lambda x:sum([len(rule_overlaps[x][v]) for v in rule_overlaps[x]]), reverse=True)
+
+	for (rule1,rule2) in sortedpairs:
+		print (rule1.pattern, rules[rule1.pattern])
+		print (rule2.pattern, rules[rule2.pattern])
+		for val in rule_overlaps[(rule1,rule2)]:
+			print("\t%s [%d]"%(val, len(rule_overlaps[(rule1, rule2)][val])))
+			# for item_id in rule_val_item_map[rule][val]:
+			# 	print "\t\t"+item_id
