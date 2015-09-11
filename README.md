@@ -1,6 +1,7 @@
 # A Tool for Finding Overlapping Normalization Rules
 
-We find overlapping/conflicting vaule normalization rules by applying all the rules for a particular attribute to all the values of a source attribute.
+We find overlapping/conflicting vaule normalization rules by applying all the value normalization rules for a particular attribute to all the values of a source attribute.
+The screipts `docker-build.sh`, `docker-start.sh` and `docker-stop.sh` respectively build a docker for the web application, start a Django server containing this application inside the docker, and stop the service. After starting the server, the web application would be accessible on http://hostaddress:8000/rule\_overlaps/.
 
 The inputs are as follows:
 
@@ -36,7 +37,7 @@ The directory with the name equal to the value of `value_file_directory` configu
    }
 }
 ```
-where `<value>` is an attribute value, `<prod_id_1>` is the id of a sample product having `<value>` for its attribute and `<cnt>` is the number of procuts having `<value>` for their attributes.
+where `<value>` is an attribute value, `<prod_id_1>` is the id of a sample product having `<value>` for its attribute and `<cnt>` is the number of procuts having `<value>` for their attribute.
 These files are created using the Python script `extract_source_values_from_json.py`. The help for this command reads as follows:
 
 ```
