@@ -34,4 +34,5 @@ The directory with the name equal to the value of `value_file_directory` configu
       'sample_product_ids' : [<prod_id_1>, ...] ,
       'prod_cnt' : <cnt>
    }
+}
 ```
