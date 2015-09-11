@@ -36,3 +36,4 @@ The directory with the name equal to the value of `value_file_directory` configu
    }
 }
 ```
+where `<value>` is an attribute value, `<prod_id_1>` is the id of a sample product having `<value>` for its attribute and `<cnt>` is the number of procuts having `<value>' for their attributes.
