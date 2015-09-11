@@ -11,16 +11,18 @@ The web application takes the following inputs:
    * "**Target normalization rule attribute**" corresponds to the `relation.rule_result` property of the normalization rules. All the rules having this values for their `relation.rule_result` property would be considered as target normalization rules to be investigated.
    * "**Target product attribute name**" refers to the name of an attribute's *normalized name*. We extract the *source values* for this attribute and apply all the target normalization rules to them.
 
+##### Output
+
+It then generates a list of pairs of normalization rules which overlap. For each rule pair, it also shows a list of values they both match and the number of product items with those values for the target attribute.
+
+### Configurations
+
 The input rules and values are given as files which are specified by the `rule_overlap.cfg` configuration file. The configurations in this file are as follows:
 
    * `rule_file` indicates the path to a file containing the normalization rules in a tab-separated format. See below for more information on how to obtain this file.
    * `value_file_directory` indicates a directory in which the value files are stored. Each file contains values of one attribute. The file name is the same as the normalized attribute name. See below for more information on how to create these files.
 
-##### Outputs
-
-It then generates a list of pairs of normalization rules which overlap. For each rule pair, it also shows a list of values they both match and the number of product items with those values for the target attribute.
-
-### `rule_file` Format
+##### `rule_file` Format
 
 We create this file based on the Microsoft Excel dump of the rules, as follows:
 
@@ -33,7 +35,7 @@ We create this file based on the Microsoft Excel dump of the rules, as follows:
    where `<input_file>` is the TSV file of rules and `<output_file>` is the name of the file we want to save the reformatted rules in.
    3. Finally we set the value of `rule_file` configuration in `rule_overlap.cfg` to the above `<output_file>` value.
 
-### `value_file_directory` Directory Content
+#### `value_file_directory` Directory Content
 
 The directory with the name equal to the value of `value_file_directory` configuration contains one file per attribute. Each file contains a set of lines, each line consists of a single JSON object. Each JSON object corresponds to an attribute value and has the following format:
 ```
