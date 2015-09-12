@@ -37,7 +37,7 @@ We create this file based on the Microsoft Excel dump of the rules, as follows:
 
 #### `value_file_directory` Directory Content
 
-The directory with the name equal to the value of `value_file_directory` configuration contains one file per attribute. Each file contains a set of lines, each line consists of a single JSON object. Each JSON object corresponds to an attribute value and has the following format:
+The directory with the name equal to the value of `value_file_directory` configuration contains one file per attribute. Each file contains a set of lines, each line consisting of a single JSON object. Each JSON object corresponds to an attribute value and has the following format:
 ```
 { <value> :
    {
